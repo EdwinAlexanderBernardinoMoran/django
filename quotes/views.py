@@ -1,21 +1,21 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseNotFound
 
 # Create your views here.
-def index(request):
-    return HttpResponse("Hello, world!")
 
-def monday(request):
-    return HttpResponse("Hello, Monday!")
+def days_weeks(request, day):
+    quote_text = ''
+    if day == 'monday':
+        quote_text = "Start your week with positivity!"
+    elif day == 'tuesday':
+        quote_text = "Keep going, it's only Tuesday!"
+    elif day == 'wednesday':
+        quote_text = "You're halfway through the week!"
+    elif day == 'thursday':
+        quote_text = "Almost there, it's Thursday!"
+    elif day == 'friday':
+        quote_text = "Finish strong, it's Friday!"
+    else:
+        return HttpResponseNotFound("Invalid day!")
 
-def tuesday(request):
-    return HttpResponse("Hello, Tuesday!")
-
-def wednesday(request):
-    return HttpResponse("Hello, Wednesday!")
-
-def thursday(request):
-    return HttpResponse("Hello, Thursday!")
-
-def friday(request):
-    return HttpResponse("Hello, Friday!")
+    return HttpResponse(quote_text)
