@@ -13,7 +13,14 @@ days_of_week = {
 # Create your views here.
 
 def index(request):
-    pass
+    list_items = ""
+    days = list(days_of_week.keys())
+
+    for day in days:
+        day_path = reverse("day", args=[day])
+        list_items += f"<li><a href=\"{day_path}\">{day.title()}</a></li>"
+    response_data = f"<ul>{list_items}</ul>"
+    return HttpResponse(response_data)
 
 def days_weeks_numbers(request, day):
     days = list(days_of_week.keys())
