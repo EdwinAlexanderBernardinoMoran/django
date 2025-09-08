@@ -31,6 +31,8 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    # Registramos la app
+    'landing',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -54,7 +56,10 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            # Se puede hacer de esta manera pero el detalles es que hay que importar una a una los templates que deseas ocupar
+            # BASE_DIR / "landing" / "templates"
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

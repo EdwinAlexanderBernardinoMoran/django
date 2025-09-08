@@ -121,3 +121,29 @@ Django es un framework que se ejecuta sobre Python.
 reverse("name-url", args = [params])
 ```
 
+## S5 - Templates
+
+#### Registrando un template.
+
+- Se pueden hacer de dos formas:
+  1. Registrando la app (`landing`) en `config/settings.py` dentro del arreglo `INSTALLED_APPS`.
+
+  ```py
+  # Primera forma de registrar la aplicacion.
+  INSTALLED_APPS = [
+    'landing',
+  ]
+  ```
+  2. Registrando directamente cada plantilla en el arreglo de `TEMPLATES`.
+
+  ```py
+    # Primera forma de registrar la aplicacion.
+    TEMPLATES = [
+        {
+            'DIRS': [
+                # Se puede hacer de esta manera pero el detalles es que hay que importar una a una los templates que deseas ocupar
+                BASE_DIR / "landing" / "templates"
+            ],
+        },
+    ]
+  ```
