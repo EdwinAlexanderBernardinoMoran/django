@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect
+from django.urls import reverse
 
 days_of_week = {
     'monday': "Start your week with positivity!",
@@ -11,6 +12,9 @@ days_of_week = {
 
 # Create your views here.
 
+def index(request):
+    pass
+
 def days_weeks_numbers(request, day):
     days = list(days_of_week.keys())
 
@@ -18,7 +22,8 @@ def days_weeks_numbers(request, day):
         return HttpResponseNotFound("Invalid day!")
     
     redirect_day = days[day-1]
-    return HttpResponseRedirect(f"/quotes/{redirect_day}")
+    redirect_path = reverse("day", args=[redirect_day])
+    return HttpResponseRedirect(redirect_path)
 
 def days_weeks(request, day):
     try:
