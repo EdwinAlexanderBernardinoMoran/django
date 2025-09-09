@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %} Day Quotes {% endblock %}
+
+{% block content %}
+    <h1>{{ name }}</h1>
+    <h2>{{ date | date:"d/m/Y" }}</h2>
+
+    <ul>
+        {% for day in day_weeks %}
+            <li><a href="{% url 'day' day %}">{{ day }}</a></li>
+        {% empty %}
+            <li>No hay días disponibles</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

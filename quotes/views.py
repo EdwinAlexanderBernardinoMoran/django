@@ -2,6 +2,8 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect
 from django.urls import reverse
 
+from datetime import date
+
 days_of_week = {
     'monday': "Start your week with positivity!",
     'tuesday': "Keep going, it's only Tuesday!",
@@ -13,14 +15,12 @@ days_of_week = {
 # Create your views here.
 
 def index(request):
-    list_items = ""
-    days = list(days_of_week.keys())
-
-    for day in days:
-        day_path = reverse("day", args=[day])
-        list_items += f"<li><a href=\"{day_path}\">{day.title()}</a></li>"
-    response_data = f"<ul>{list_items}</ul>"
-    return HttpResponse(response_data)
+    today = date.today()
+    return render(request, 'quotes/quotes.html', {
+        "name": "Day Quotes",
+        "date": today,
+        "day_weeks": days_of_week.keys()
+    })
 
 def days_weeks_numbers(request, day):
     days = list(days_of_week.keys())

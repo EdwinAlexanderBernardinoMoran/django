@@ -289,3 +289,11 @@ Los tags en Django Template Language (DTL) son instrucciones especiales que cont
         },
     ]
     ```
+
+    #### Ejercicio
+
+    - Crea una carpeta en la raiz del proyecto llamada `templates/name.html` ahi crea la estructura base.
+    - Registra este template principal en el archivo `settings.py` en `TEMPLATES.DIRS` para que Django lo reconosca.
+    - Primero crea una carpeta dentro de tu app llamada `templates/name_app`, dentro crea un archivo de preferencia `name_app.html`
+    - Registra el template en el archivo `settings.py` en `INSTALLED_APPS`
+    - Crea un url para tu pagina principal en caso no la tengas.
