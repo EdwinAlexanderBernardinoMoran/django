@@ -12,5 +12,19 @@
     <h2>{{ name | title }}</h2>
 
     <p>{{ date | date:"d/m/Y" }}</p>
+
+    {% if name == "Landing Page" %}
+        <h3>Es la landing</h3>
+    {% else %}
+        <h3>No es la landing</h3>
+    {% endif %}
+
+    <ul>
+        {% for item in stacks %}
+            <li><a href="{% url 'stack' item.name %}">{{ item.name }}</a></li>
+        {% empty %}
+            <li>No hay tecnologías disponibles</li>
+        {% endfor %}
+    </ul>
 </body>
 </html>

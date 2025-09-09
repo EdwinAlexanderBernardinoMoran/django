@@ -203,3 +203,72 @@ Esto mostrará el valor de la variable `nombre` en el HTML generado.
 ```html
 <p>Hola, {{ nombre | upper }}!</p>
 ```
+
+#### Tags
+
+Los tags en Django Template Language (DTL) son instrucciones especiales que controlan la lógica dentro de los templates, como bucles, condicionales o la inclusión de otros archivos. Se escriben entre `{% %}`.
+
+- En los templates puedes acceder a los valores atravez del punto como si fuera un objeto auque sean listas
+
+```html
+<ul>
+    <li>{{ stacks.0 }}</li>
+</ul>
+```
+
+**Ejemplos comunes de tags:**
+
+- **for**: Para iterar sobre una lista.
+    ```html
+    {% for item in lista %}
+      <p>{{ item }}</p>
+    {% endfor %}
+    ```
+
+- **if**: Para condicionales.
+    ```html
+    {% if usuario_activo %}
+      <p>Bienvenido, usuario activo.</p>
+    {% else %}
+      <p>Por favor, activa tu cuenta.</p>
+    {% endif %}
+    ```
+
+- **include**: Para incluir otro template.
+    ```html
+    {% include "header.html" %}
+    ```
+
+- **block** y **extends**: Para herencia de templates.
+    ```html
+    {% extends "base.html" %}
+    {% block contenido %}
+      <p>Contenido específico de la página.</p>
+    {% endblock %}
+    ```
+
+- **url tag**: Nos ayudan a no escribir toda una url completa.
+    - Define una url
+
+    ```py
+        path('stack/<str:tool>', views.stack, name='stack')
+    ```
+
+    - Define el metodo en el view
+
+    ```py
+        def stack(request, tool):
+            return HttpResponse(f"Estás utilizando la herramienta: {tool}")
+    ```
+
+    - Uso en el template
+
+    ```html
+    <ul>
+        {% for item in stacks %}
+            <li><a href="{% url 'stack' item.name %}">{{ item.name }}</a></li>
+        {% empty %}
+            <li>No hay tecnologías disponibles</li>
+        {% endfor %}
+    </ul>
+    ```
