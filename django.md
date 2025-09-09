@@ -173,3 +173,23 @@ Ejemplo básico:
 - **'mi_template.html'** es el archivo de template.
 - contexto es un diccionario con los datos que se pasan al template.
 - Django busca el template en las carpetas configuradas en TEMPLATES en settings.py.
+
+#### Django Template Language e interpolación de variables
+
+Django Template Language (DTL) es el sistema de plantillas que utiliza Django para generar HTML dinámico. Permite:
+
+- Separar la lógica de presentación (cómo se muestra la información) de la lógica de negocio (cómo se procesa la información).
+- Crear páginas web dinámicas fácilmente.
+
+**Interpolación de variables en DTL:**
+
+- Consiste en insertar valores de variables de Python (por ejemplo, datos de una base de datos) directamente en el HTML.
+- Se realiza usando doble llave: `{{ variable }}`
+
+**Ejemplo:**
+
+```html
+<p>Hola, {{ nombre }}!</p>
+```
+
+Esto mostrará el valor de la variable `nombre` en el HTML generado.
