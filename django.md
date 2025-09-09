@@ -147,3 +147,29 @@ reverse("name-url", args = [params])
         },
     ]
   ```
+
+#### Renderizando templates
+
+- Para renderizar templates en Django, se usa la función render dentro de una vista. Esta función combina un archivo HTML (template) con un contexto (datos) y devuelve una respuesta HTTP.
+
+Ejemplo:
+
+```py
+# views.py
+from django.shortcuts import render
+
+def mi_vista(request):
+    contexto = {'nombre': 'Juan'}
+    return render(request, 'mi_template.html', contexto)
+```
+
+/explain
+Explicame en breve como se renderizan los templates en Djgano?
+
+Para renderizar templates en Django, se usa la función render dentro de una vista. Esta función combina un archivo HTML (template) con un contexto (datos) y devuelve una respuesta HTTP.
+
+Ejemplo básico:
+
+- **'mi_template.html'** es el archivo de template.
+- contexto es un diccionario con los datos que se pasan al template.
+- Django busca el template en las carpetas configuradas en TEMPLATES en settings.py.
