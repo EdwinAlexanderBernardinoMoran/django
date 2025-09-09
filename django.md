@@ -193,3 +193,13 @@ Django Template Language (DTL) es el sistema de plantillas que utiliza Django pa
 ```
 
 Esto mostrará el valor de la variable `nombre` en el HTML generado.
+
+#### Filtros
+
+- Los filtros son decoradores que se aplican a las variables que se le pasan por medio de la view al template.
+
+**Ejemplo:**
+
+```html
+<p>Hola, {{ nombre | upper }}!</p>
+```

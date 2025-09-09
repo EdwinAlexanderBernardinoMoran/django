@@ -7,6 +7,10 @@
 </head>
 <body>
     <h1>Hola desde Django</h1>
-    <h2>{{ name }}</h2>
+    <h2>{{ name | upper }}</h2>
+    <h2>{{ name | lower }}</h2>
+    <h2>{{ name | title }}</h2>
+
+    <p>{{ date | date:"d/m/Y" }}</p>
 </body>
 </html>
