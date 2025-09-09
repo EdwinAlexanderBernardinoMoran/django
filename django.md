@@ -272,3 +272,20 @@ Los tags en Django Template Language (DTL) son instrucciones especiales que cont
         {% endfor %}
     </ul>
     ```
+
+    ### Herencia de templates (Block tag)
+
+    - Es una plantilla base de la cual dependen todos los demas, es necesario crear una carpeta `templates` en la raiz, seguido del nombre de la app(landing), para que Django lo puedo identificar, en este caso es similar a Laravel pero para que Django lo reconosca es necesario registrarlo en los `settings.py`.
+
+    ```py
+    TEMPLATES = [
+        {
+            'DIRS': [
+                # Se puede hacer de esta manera pero el detalles es que hay que importar una a una los templates que deseas ocupar
+                # BASE_DIR / "landing" / "templates"
+
+                BASE_DIR / "templates"
+            ],
+        },
+    ]
+    ```

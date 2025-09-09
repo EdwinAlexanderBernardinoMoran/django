@@ -59,6 +59,8 @@ TEMPLATES = [
         'DIRS': [
             # Se puede hacer de esta manera pero el detalles es que hay que importar una a una los templates que deseas ocupar
             # BASE_DIR / "landing" / "templates"
+
+            BASE_DIR / "templates"
         ],
         'APP_DIRS': True,
         'OPTIONS': {

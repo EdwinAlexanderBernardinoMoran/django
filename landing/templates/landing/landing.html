@@ -1,11 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Django</title>
-</head>
-<body>
+{% comment %} Extentiendo plantilla base {% endcomment %}
+{% extends 'base.html' %}
+
+{% block title %} Landing Page {% endblock %}
+
+{% block content %}
     <h1>Hola desde Django</h1>
     <h2>{{ name | upper }}</h2>
     <h2>{{ name | lower }}</h2>
@@ -26,5 +24,4 @@
             <li>No hay tecnologías disponibles</li>
         {% endfor %}
     </ul>
-</body>
-</html>
+{% endblock %}
