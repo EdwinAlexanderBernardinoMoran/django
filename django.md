@@ -273,99 +273,177 @@ Los tags en Django Template Language (DTL) son instrucciones especiales que cont
     </ul>
     ```
 
-    #### Herencia de templates (Block tag)
+#### Herencia de templates (Block tag)
 
-    - Es una plantilla base de la cual dependen todos los demas, es necesario crear una carpeta `templates` en la raiz, seguido del nombre de la app(landing), para que Django lo puedo identificar, en este caso es similar a Laravel pero para que Django lo reconosca es necesario registrarlo en los `settings.py`.
+- Es una plantilla base de la cual dependen todos los demas, es necesario crear una carpeta `templates` en la raiz, seguido del nombre de la app(landing), para que Django lo puedo identificar, en este caso es similar a Laravel pero para que Django lo reconosca es necesario registrarlo en los `settings.py`.
 
-    ```py
-    TEMPLATES = [
-        {
-            'DIRS': [
-                # Se puede hacer de esta manera pero el detalles es que hay que importar una a una los templates que deseas ocupar
-                # BASE_DIR / "landing" / "templates"
+```py
+TEMPLATES = [
+    {
+        'DIRS': [
+            # Se puede hacer de esta manera pero el detalles es que hay que importar una a una los templates que deseas ocupar
+            # BASE_DIR / "landing" / "templates"
 
-                BASE_DIR / "templates"
-            ],
-        },
-    ]
-    ```
+            BASE_DIR / "templates"
+        ],
+    },
+]
+```
 
-    ### Ejercicio
+#### Ejercicio
+- Crea una carpeta en la raiz del proyecto llamada `templates/name.html` ahi crea la estructura base.
+- Registra este template principal en el archivo `settings.py` en `TEMPLATES.DIRS` para que Django lo reconosca.
+- Primero crea una carpeta dentro de tu app llamada `templates/name_app`, dentro crea un archivo de preferencia `name_app.html`
+- Registra el template en el archivo `settings.py` en `INSTALLED_APPS`
+- Crea un url para tu pagina principal en caso no la tengas.
 
-    - Crea una carpeta en la raiz del proyecto llamada `templates/name.html` ahi crea la estructura base.
-    - Registra este template principal en el archivo `settings.py` en `TEMPLATES.DIRS` para que Django lo reconosca.
-    - Primero crea una carpeta dentro de tu app llamada `templates/name_app`, dentro crea un archivo de preferencia `name_app.html`
-    - Registra el template en el archivo `settings.py` en `INSTALLED_APPS`
-    - Crea un url para tu pagina principal en caso no la tengas.
+#### Fragmentos de templates (include tag)
 
-    ### Fragmentos de templates (include tag)
+- Nos permite poder incorporar trozos de codigos reutilizables dentro de cualquier archivo html.
+- Crea una carpeta llamada `quotes/templates/quotes/includes/partial.html`
 
-    - Nos permite poder incorporar trozos de codigos reutilizables dentro de cualquier archivo html.
-    - Crea una carpeta llamada `quotes/templates/quotes/includes/partial.html`
+**Ejemplo de importacion**
+```html
+{% include './includes/partial.html' with name=name day_weeks=day_weeks %}
+```
 
-    **Ejemplo de importacion**
-    ```html
-    {% include './includes/partial.html' with name=name day_weeks=day_weeks %}
-    ```
+#### Template 404
 
-    #### Template 404
+- Crea un archivo 404.html en la siguiente ruta `templates/404.html`
+- Automaticamente Django reconocera que existe ese archivo para poder mostrarlo en pantalla.
 
-    - Crea un archivo 404.html en la siguiente ruta `templates/404.html`
-    - Automaticamente Django reconocera que existe ese archivo para poder mostrarlo en pantalla.
+```py
+def days_weeks(request, day):
+try:
+    return HttpResponse(days_of_week[day])
+except KeyError:
+    raise Http404()
+```
 
-    ```py
-    def days_weeks(request, day):
-    try:
-        return HttpResponse(days_of_week[day])
-    except KeyError:
-        raise Http404()
-    ```
+**Importante!**: Asegúrate de que DEBUG = False en tu archivo settings.py para que Django use tu template 404 personalizado en producción.
 
-    **Importante!**: Asegúrate de que DEBUG = False en tu archivo settings.py para que Django use tu template 404 personalizado en producción.
+#### Archivos estaticos
 
-    #### Archivos estaticos
+- Es necesario que el paquete `django.contrib.staticfiles` este instalado y configurado correctamente en el archivo `settings.py` en `INSTALLED_APPS = []`.
+- La variable `STATIC_URL` no funciona en modo de desarrollo solo funciona en produccion.
+- Dentro de cada app crea una carpeta llamada `quotes/static/quotes/styles.css`.
+- Luego en la plantilla base es necesario agregar un `block` para poder agregar ahi los archivos personalizados.
 
-    - Es necesario que el paquete `django.contrib.staticfiles` este instalado y configurado correctamente en el archivo `settings.py` en `INSTALLED_APPS = []`.
-    - La variable `STATIC_URL` no funciona en modo de desarrollo solo funciona en produccion.
-    - Dentro de cada app crea una carpeta llamada `quotes/static/quotes/styles.css`.
-    - Luego en la plantilla base es necesario agregar un `block` para poder agregar ahi los archivos personalizados.
+```html
+<!-- Archivo base o layout principal -->
+{% block page_styles %}{% endblock page_styles %}
+```
 
-    ```html
-    <!-- Archivo base o layout principal -->
-    {% block page_styles %}{% endblock page_styles %}
-    ```
+```html
+<!-- Carga de archivos estaticos dentro del html personalizado-->
+{% load static %}
 
-    ```html
-    <!-- Carga de archivos estaticos dentro del html personalizado-->
-    {% load static %}
+{% block page_styles %}
+    <link rel="stylesheet" href="{% static 'quotes/styles.css' %}">
+{% endblock page_styles %}
+```
 
-    {% block page_styles %}
-        <link rel="stylesheet" href="{% static 'quotes/styles.css' %}">
-    {% endblock page_styles %}
+#### Archivos estaticos globales
 
-    ```
+- Crea una carpeta a nivel global llamada `static` si quieres crea una carpeta por cada tipo de documento.
+- Luego carga los archivos estaticos en el layout principal.
 
-    #### Archivos estaticos globales
+```html
 
-    - Crea una carpeta a nivel global llamada `static` si quieres crea una carpeta por cada tipo de documento.
-    - Luego carga los archivos estaticos en el layout principal.
+<!-- Antes del DOCTYPE -->
+{% load static %}
 
-    ```html
+<link rel="stylesheet" href="{% static 'css/styles.css' %}">
+```
 
-    <!-- Antes del DOCTYPE -->
-    {% load static %}
+- Es necesario que Django sepa donde estan los archivos que quiero cargar de la siguiente manera.
 
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+```py
+# Añadimos la ruta de los archivos estáticos globales
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
 
-    ```
+    # Podemos agregar cuantas urls sean necesarias.
+]
+```
 
-    - Es necesario que Django sepa donde estan los archivos que quiero cargar de la siguiente manera.
+## S3 - Modelos y Base de Datos
 
-    ```py
-    # Añadimos la ruta de los archivos estáticos globales
-    STATICFILES_DIRS = [
-        BASE_DIR / "static",
+#### Que es un ORM y como funciona en Django?
+- Object-Relational Mapping (ORM), es una herramienta que permite trabajar con base de datos utilizando clases y objetos en un lenguaje deprogramacion, en lugar de usar SQL directamente.
 
-        # Podemos agregar cuantas urls sean necesarias.
-    ]
-    ```
+    Clases = Tablas
+    Atributos = Columnas
+    Instancias = Filas
+
+- Cada clase que hereda de `models.Model` se convierte en una tabla en la base de datos.
+
+```py
+class Book(models.Model):
+    title = models.CharField(max_length=200)
+```
+
+- Equivalencia entre SQL y Django ORM
+
+```sql
+INSERT INTO books (title, publication_year) VALUES ('1984', 1949)
+```
+
+```py
+# Create
+Book.objects.create(title="1984", publication_year=1949)
+
+# Select
+Book.objects.all()
+
+# Filter
+Book.objects.filter(author__name="Orwell")
+```
+
+#### Tipos de campos y parametros
+
+En Django, los tipos de campos y parámetros se utilizan para definir la estructura de los modelos que representan tablas en la base de datos. 
+
+[Tipos de Campos](https://docs.djangoproject.com/en/5.2/ref/models/fields/#field-options)
+
+**Tipos de campos comunes en Django:**
+- `CharField`: Almacena cadenas de texto de longitud limitada.
+- `TextField`: Almacena texto de longitud ilimitada.
+- `IntegerField`: Almacena números enteros.
+- `FloatField`: Almacena números de punto flotante.
+- `BooleanField`: Almacena valores booleanos (`True` o `False`).
+- `DateField`: Almacena fechas.
+- `DateTimeField`: Almacena fechas y horas.
+- `EmailField`: Almacena direcciones de correo electrónico.
+- `ForeignKey`: Define una relación muchos-a-uno con otro modelo.
+- `ManyToManyField`: Define una relación muchos-a-muchos con otro modelo.
+- `OneToOneField`: Define una relación uno-a-uno con otro modelo.
+
+[Tipos de Parametros](https://docs.djangoproject.com/en/5.2/ref/models/fields/#field-options)
+
+**Parámetros comunes de los campos:**
+- `max_length`: Longitud máxima del campo (usado en `CharField`).
+- `null`: Permite valores nulos en la base de datos.
+- `blank`: Permite que el campo esté vacío en formularios.
+- `default`: Valor por defecto del campo.
+- `choices`: Opciones predefinidas para el campo.
+- `unique`: Garantiza que el valor sea único en la tabla.
+- `primary_key`: Define el campo como clave primaria.
+
+Estos campos y parámetros permiten personalizar cómo se almacenan y validan los datos en la base de datos a través de los modelos de Django.
+
+[Mas Informacion](https://www.geeksforgeeks.org/python/django-model-data-types-and-fields-list/)
+
+#### Creando modelos y migraciones
+
+- Los modelos se crean en el archivo `models.py`.
+
+```py
+class Author(models.Model):
+    name = models.CharField(max_length=100)
+    birth_date = models.DateField(null=True, blank=True)
+```
+
+- Luego de crear los modelos ejecuta el comando `python3 manage.py makemigrations name-app`.
+- Ejecuta las migraciones con el comando `python3 manage.py migrations`.
+- Ejecuta `python3 manage.py showmigrations`.

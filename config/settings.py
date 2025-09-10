@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     # Registramos la app
     'landing',
     'quotes',
+    'minilibrary',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
