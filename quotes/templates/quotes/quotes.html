@@ -3,6 +3,7 @@
 {% block title %} Day Quotes {% endblock %}
 
 {% block content %}
+    {% include './includes/partial.html' with name=name day_weeks=day_weeks %}
     <h1>{{ name }}</h1>
     <h2>{{ date | date:"d/m/Y" }}</h2>
 
