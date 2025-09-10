@@ -1,6 +1,14 @@
 {% extends 'base.html' %}
 
+{% comment %} Carga de archivos estaticos {% endcomment %}
+{% load static %}
+
 {% block title %} Day Quotes {% endblock %}
+
+{% block page_styles %}
+    <link rel="stylesheet" href="{% static 'quotes/styles.css' %}">
+{% endblock page_styles %}
+
 
 {% block content %}
     {% include './includes/partial.html' with name=name day_weeks=day_weeks %}
