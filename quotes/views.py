@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect, Http404
 from django.urls import reverse
 
 from datetime import date
@@ -36,4 +36,4 @@ def days_weeks(request, day):
     try:
         return HttpResponse(days_of_week[day])
     except KeyError:
-        return HttpResponseNotFound("Invalid day!")
+        raise Http404()
