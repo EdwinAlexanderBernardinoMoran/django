@@ -273,7 +273,7 @@ Los tags en Django Template Language (DTL) son instrucciones especiales que cont
     </ul>
     ```
 
-    ### Herencia de templates (Block tag)
+    #### Herencia de templates (Block tag)
 
     - Es una plantilla base de la cual dependen todos los demas, es necesario crear una carpeta `templates` en la raiz, seguido del nombre de la app(landing), para que Django lo puedo identificar, en este caso es similar a Laravel pero para que Django lo reconosca es necesario registrarlo en los `settings.py`.
 
@@ -297,3 +297,75 @@ Los tags en Django Template Language (DTL) son instrucciones especiales que cont
     - Primero crea una carpeta dentro de tu app llamada `templates/name_app`, dentro crea un archivo de preferencia `name_app.html`
     - Registra el template en el archivo `settings.py` en `INSTALLED_APPS`
     - Crea un url para tu pagina principal en caso no la tengas.
+
+    ### Fragmentos de templates (include tag)
+
+    - Nos permite poder incorporar trozos de codigos reutilizables dentro de cualquier archivo html.
+    - Crea una carpeta llamada `quotes/templates/quotes/includes/partial.html`
+
+    **Ejemplo de importacion**
+    ```html
+    {% include './includes/partial.html' with name=name day_weeks=day_weeks %}
+    ```
+
+    #### Template 404
+
+    - Crea un archivo 404.html en la siguiente ruta `templates/404.html`
+    - Automaticamente Django reconocera que existe ese archivo para poder mostrarlo en pantalla.
+
+    ```py
+    def days_weeks(request, day):
+    try:
+        return HttpResponse(days_of_week[day])
+    except KeyError:
+        raise Http404()
+    ```
+
+    **Importante!**: Asegúrate de que DEBUG = False en tu archivo settings.py para que Django use tu template 404 personalizado en producción.
+
+    #### Archivos estaticos
+
+    - Es necesario que el paquete `django.contrib.staticfiles` este instalado y configurado correctamente en el archivo `settings.py` en `INSTALLED_APPS = []`.
+    - La variable `STATIC_URL` no funciona en modo de desarrollo solo funciona en produccion.
+    - Dentro de cada app crea una carpeta llamada `quotes/static/quotes/styles.css`.
+    - Luego en la plantilla base es necesario agregar un `block` para poder agregar ahi los archivos personalizados.
+
+    ```html
+    <!-- Archivo base o layout principal -->
+    {% block page_styles %}{% endblock page_styles %}
+    ```
+
+    ```html
+    <!-- Carga de archivos estaticos dentro del html personalizado-->
+    {% load static %}
+
+    {% block page_styles %}
+        <link rel="stylesheet" href="{% static 'quotes/styles.css' %}">
+    {% endblock page_styles %}
+
+    ```
+
+    #### Archivos estaticos globales
+
+    - Crea una carpeta a nivel global llamada `static` si quieres crea una carpeta por cada tipo de documento.
+    - Luego carga los archivos estaticos en el layout principal.
+
+    ```html
+
+    <!-- Antes del DOCTYPE -->
+    {% load static %}
+
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+
+    ```
+
+    - Es necesario que Django sepa donde estan los archivos que quiero cargar de la siguiente manera.
+
+    ```py
+    # Añadimos la ruta de los archivos estáticos globales
+    STATICFILES_DIRS = [
+        BASE_DIR / "static",
+
+        # Podemos agregar cuantas urls sean necesarias.
+    ]
+    ```
