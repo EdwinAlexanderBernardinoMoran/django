@@ -447,3 +447,13 @@ class Author(models.Model):
 - Luego de crear los modelos ejecuta el comando `python3 manage.py makemigrations name-app`.
 - Ejecuta las migraciones con el comando `python3 manage.py migrations`.
 - Ejecuta `python3 manage.py showmigrations`.
+
+#### Shell en Django
+
+- La shell de Django es una consola interactiva de Python que carga automáticamente el entorno de tu proyecto Django. Permite ejecutar código Python y acceder a tus modelos, consultar la base de datos, probar funciones y depurar tu aplicación de manera rápida.
+
+- Para abrir la shell de Django, usa este comando en la terminal desde la raíz de tu proyecto:
+
+```shell
+python manage.py shell
+```
