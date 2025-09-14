@@ -457,3 +457,12 @@ class Author(models.Model):
 ```shell
 python manage.py shell
 ```
+
+## S8 - Manipulacion de datos con el ORM
+
+#### Creacion de registros con el ORM usando create
+
+- Esto crea de forma directa el registro.
+```py
+Author.objects.create(name="Edwin Alexander", birth_date="2002-06-25")
+```
