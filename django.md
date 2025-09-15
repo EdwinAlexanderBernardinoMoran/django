@@ -510,3 +510,16 @@ Book.objects.bulk_create(books)
 end = time.time() 
 print(f"Tiempo usando bulk_create(): {end - start:.2f} segundos")
 ```
+
+#### Creando registros de forma segura
+
+- Este metodo nos ayuda a evitar duplicacion de datos y actualizar los datos de manera segura en caso no exista podemos crearlo sin ningun problema.
+
+```py
+
+# Obtiene el dato si no existe lo crea
+edwin = Author.objects.get_or_create(name="Edwin Alexander", defaults={"birth_date":"1995-08-10"})
+
+# Actualiza el dato si no existe lo crea
+elizabeth = Author.objects.update_or_create(name="Elizabeth Perez", defaults={"birth_date":"2002-08-10"})
+```
