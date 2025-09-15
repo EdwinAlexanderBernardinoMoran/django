@@ -466,3 +466,47 @@ python manage.py shell
 ```py
 Author.objects.create(name="Edwin Alexander", birth_date="2002-06-25")
 ```
+
+#### Creacion de registros con el ORM usando save
+
+- Esto solo crea una instancia del objeto, puedes manipular los datos luego antes de guardarlo.
+
+```py
+rowling = Author(name="J. K. Rowling", birth_date="1965-07-31")
+rowling.name.upper()
+rowling.save() # Guardando los datos en la bd.
+```
+
+### Crear registros en lote
+
+- Crear registros en lote en Django significa insertar múltiples registros en la base de datos en una sola operación, en lugar de guardar cada objeto individualmente. Esto se logra usando el método `bulk_create()` del ORM, lo que mejora el rendimiento al reducir la cantidad de consultas a la base de datos.
+
+**Ejemplo:**
+
+```py
+Book.objects.bulk_create([
+... Book(title="Django RestFramework", publication_date="2025-01-01", author=rowling, pages=250, isbn="1234987"),
+... Book(title="Curso de python", publication_date="2025-05-12", author=rowling, pages=100, isbn="1254679")
+])
+```
+
+```py
+# Usando save:
+start = time.time() 
+for i in range(1000): 
+	book = Book( title=f"Libro lento {i}", publication_date="2000-01-01", author=author, pages=100, isbn=f"123456{i}" ) 
+	book.save() 
+end = time.time() 
+print(f"Tiempo usando .save(): {end - start:.2f} segundos")
+
+
+# Usando bulk_create():
+start = time.time() 
+books = [] 
+for i in range(1000): 
+    books.append(Book( title=f"Libro rápido {i}", publication_date="2000-01-01", author=author, pages=250, isbn=f"98765{i}" )) 
+
+Book.objects.bulk_create(books) 
+end = time.time() 
+print(f"Tiempo usando bulk_create(): {end - start:.2f} segundos")
+```
