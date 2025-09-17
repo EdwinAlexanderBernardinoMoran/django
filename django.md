@@ -523,3 +523,83 @@ edwin = Author.objects.get_or_create(name="Edwin Alexander", defaults={"birth_da
 # Actualiza el dato si no existe lo crea
 elizabeth = Author.objects.update_or_create(name="Elizabeth Perez", defaults={"birth_date":"2002-08-10"})
 ```
+
+#### Consultas basicas con el ORM
+
+- Obtener todos los registros:
+    ```py
+    Author.objects.all()
+    ```
+
+- Obtener un solo registro (por campo único):
+    ```py
+    Author.objects.get(id=1)
+    ```
+
+- Obtener el primer y último registro:
+    ```py
+    Author.objects.first()
+    Author.objects.last()
+    ```
+
+- Ordenar resultados:
+    ```py
+    Author.objects.order_by('name')  # Ascendente
+    Author.objects.order_by('-name') # Descendente
+    ```
+
+- Filtrar registros por campo:
+    ```py
+    author = Author.objects.filter(name="Edwin Alexander") # Case Sensitive
+    author = Author.objects.filter(name__iexact="Edwin Alexander") # Case Insensitive
+
+    # Busqueda por coincidencia parcial.
+    author = Author.objects.filter(name__contains="Alexander") # Permite buscar si alguna palabra coincide en el campo.
+    author = Author.objects.filter(name__endswith="Alexander") # Busca informacion cuyo nombre en este caso empieza con Alexander
+    author = Author.objects.filter(name__startswith="Ale") # Busca informacion cuyo nombre en este caso termina con Alexander
+    author = Author.objects.filter(name__startswith="Alexander").exists() # Verifica si existe un registro con cuya busqueda y regresa TRUE o FALSE
+    author.query # Imprime la consulta SQL
+    ```
+
+- Filtrar por rango
+    ```py
+    author = Author.objects.filter(id__in=[1, 2, 3, 4]) # Trae todos los autores que encuetre
+    author = Author.objects.filter(id__gt=10) # Trae todos los autores que cuyo id es mayor a 10
+    author = Author.objects.filter(id__gte=10) # Trae todos los autores que cuyo id es mayor o gual a 10
+    author = Author.objects.filter(id__lt=10) # Trae todos los autores que cuyo id es menor a 10
+    author = Author.objects.filter(id__lte=10) # Trae todos los autores que cuyo id es menor o igual a 10
+    ```
+- Filtrando por fechas
+
+    ```py
+    from datetime import date
+
+    Book.objects.filter(publication_date=date(2025,1,1))
+
+    # En caso el campo no sea de tipo fecha puedes a gregar la siguiente palabra asi despues del nombre del campo (publication_date__date) si es de tipo fecha entonces va a tronar
+    Book.objects.filter(publication_date__date=date(2025,1,1))
+
+    # Por año
+    Book.objects.filter(publication_date__year=2025)
+
+    # Por día
+    Book.objects.filter(publication_date__day=11)
+
+    # Mayores al 2010
+    Book.objects.filter(publication_date__gt=date(2010,1,1))
+
+    # Menores a 1990
+    Book.objects.filter(publication_date__lt=date(1990,1,1))
+    ```
+- Consultas Q
+
+    Las consultas Q en Django permiten construir consultas más complejas usando operadores lógicos como AND, OR y NOT. Son útiles cuando necesitas combinar múltiples condiciones en un solo filtro, especialmente cuando las condiciones son alternativas o excluyentes.
+
+    ```py
+    from django.db.models import Q
+
+    Book.objects.filter(Q(title__icontains="software") | Q(title__icontains="prisionero"))
+
+    # Relacion con el author
+    Book.objects.filter(Q(title__icontains="prisioner") | Q(author__name__icontains="Edwin"))
+    ```
