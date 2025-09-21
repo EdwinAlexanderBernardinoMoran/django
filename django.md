@@ -526,29 +526,29 @@ elizabeth = Author.objects.update_or_create(name="Elizabeth Perez", defaults={"b
 
 #### Consultas basicas con el ORM
 
-- Obtener todos los registros:
+- **Obtener todos los registros**:
     ```py
     Author.objects.all()
     ```
 
-- Obtener un solo registro (por campo único):
+- **Obtener un solo registro (por campo único)**
     ```py
     Author.objects.get(id=1)
     ```
 
-- Obtener el primer y último registro:
+- **Obtener el primer y último registro**
     ```py
     Author.objects.first()
     Author.objects.last()
     ```
 
-- Ordenar resultados:
+- **Ordenar resultados**
     ```py
     Author.objects.order_by('name')  # Ascendente
     Author.objects.order_by('-name') # Descendente
     ```
 
-- Filtrar registros por campo:
+- **Filtrar registros por campo**
     ```py
     author = Author.objects.filter(name="Edwin Alexander") # Case Sensitive
     author = Author.objects.filter(name__iexact="Edwin Alexander") # Case Insensitive
@@ -561,7 +561,7 @@ elizabeth = Author.objects.update_or_create(name="Elizabeth Perez", defaults={"b
     author.query # Imprime la consulta SQL
     ```
 
-- Filtrar por rango
+- **Filtrar por rango**
     ```py
     author = Author.objects.filter(id__in=[1, 2, 3, 4]) # Trae todos los autores que encuetre
     author = Author.objects.filter(id__gt=10) # Trae todos los autores que cuyo id es mayor a 10
@@ -569,7 +569,7 @@ elizabeth = Author.objects.update_or_create(name="Elizabeth Perez", defaults={"b
     author = Author.objects.filter(id__lt=10) # Trae todos los autores que cuyo id es menor a 10
     author = Author.objects.filter(id__lte=10) # Trae todos los autores que cuyo id es menor o igual a 10
     ```
-- Filtrando por fechas
+- **Filtrando por fechas**
 
     ```py
     from datetime import date
@@ -591,7 +591,7 @@ elizabeth = Author.objects.update_or_create(name="Elizabeth Perez", defaults={"b
     # Menores a 1990
     Book.objects.filter(publication_date__lt=date(1990,1,1))
     ```
-- Consultas Q
+- **Consultas Q**
 
     Las consultas Q en Django permiten construir consultas más complejas usando operadores lógicos como AND, OR y NOT. Son útiles cuando necesitas combinar múltiples condiciones en un solo filtro, especialmente cuando las condiciones son alternativas o excluyentes.
 
@@ -603,3 +603,101 @@ elizabeth = Author.objects.update_or_create(name="Elizabeth Perez", defaults={"b
     # Relacion con el author
     Book.objects.filter(Q(title__icontains="prisioner") | Q(author__name__icontains="Edwin"))
     ```
+
+- **Consultas F**
+
+Las consultas F en Django utilizan objetos `F` para referenciar valores de otros campos del mismo modelo directamente en la base de datos, permitiendo realizar operaciones y comparaciones entre campos sin traer los datos a Python. Son útiles para actualizar valores en función de otros campos y para realizar consultas más eficientes.
+
+
+```py
+from django.db.models import F
+
+# Actualizar el campo 'pages' sumando 10 a su valor actual
+Book.objects.update(pages=F('pages') + 10)
+
+# Filtrar libros donde 'pages' es mayor que 'publication_year'
+Book.objects.filter(pages__gt=F('publication_year'))
+```
+
+Esto permite que las operaciones se ejecuten directamente en la base de datos, optimizando el rendimiento y evitando condiciones de carrera.
+
+- **Actualizacion de registros**
+
+```py
+
+# Forma de actualizar registros
+author = Author.objects.get(name="Alexander")
+author.name = "Edwin"
+author.save()
+
+# ¡ Actualiza todos los libros que sean de "Edwin" !
+Book.objects.filter(author__name="Edwin").update(title="Titulo actualizado")
+
+```
+
+- **Eliminar registros**
+
+```py
+
+# Elimina el recurso de forma individual.
+book = Book.objects.get(title="El poder de la imagen publica")
+book.delete()
+
+# Filtra por año y que sean menores al año proporcionado.
+Book.objects.filter(publication_date_year__lt=2001).delete()
+```
+
+
+- El argumento on_delete se usa en campos ForeignKey para definir qué sucede cuando el objeto relacionado es eliminado. Aquí tienes los tipos principales de comportamientos de on_delete:
+
+- **CASCADE**: Elimina también los objetos que dependen del objeto borrado.  
+- **PROTECT**: Impide borrar el objeto relacionado si existen dependientes; lanza una excepción.  
+- **SET_NULL**: Establece el campo como `NULL` si el objeto relacionado se elimina (requiere `null=True`).  
+- **SET_DEFAULT**: Asigna el valor por defecto al campo si el objeto relacionado se elimina (requiere `default`).  
+- **SET()**: Permite asignar una función o valor personalizado al campo cuando el objeto relacionado se elimina.  
+- **DO_NOTHING**: No realiza ninguna acción; puede causar errores de integridad referencial.
+
+- **Soft Delete**
+
+Sirve cuando se quiere conservar los datos pero ocultarlos del sistema. No se borra como tal
+
+```py
+# Ejemplo del soft delete
+class Book(models.Model):
+    title = models.CharField(max_length=200)
+    is_active = models.BooleanField(default=True)
+
+```
+
+- **Eliminar registros con relaciones**
+
+```py
+# Se elimina tambien los libros del author en caso en la relacion esten en CASCADE
+author = Author.objects.get(name="Antonio Cuellar")
+author.delete()
+```
+
+- **Aggregate**
+
+- Es una forma para aplicar funciones agregadas al SQL se utilizan para calcular valores resumidos directamente en la base de datos, como sumas, promedios, conteos, mínimos y máximos. Esto es útil cuando necesitas obtener estadísticas o resultados globales sin traer todos los registros a Python.
+
+- Ejecuta el cálculo en la base de datos, lo que es más eficiente.
+- Evita cargar todos los registros en memoria.
+
+```py
+from django.db.models import Count, Sum, Avg, Min, Max
+
+# Contar libros
+Book.objects.aggregate(total=Count('id'))
+
+# Sumar páginas
+Book.objects.aggregate(total_pages=Sum('pages'))
+
+# Promedio de páginas
+Book.objects.aggregate(avg_pages=Avg('pages'))
+
+# Mínimo y máximo de páginas
+Book.objects.aggregate(min_pages=Min('pages'), max_pages=Max('pages'))
+```
+
+- **Annotations**
