@@ -701,3 +701,47 @@ Book.objects.aggregate(min_pages=Min('pages'), max_pages=Max('pages'))
 ```
 
 - **Annotations**
+
+- Nos da metrica por objeto(por registros) agrega una columna virtual a cada una de las instancias de la consulta.
+
+- Para mostrar datos agregados junto a cada registro (por ejemplo, cantidad de libros por autor).
+- Para realizar cálculos dinámicos sin modificar el modelo.
+- Para optimizar consultas evitando cálculos en Python.
+
+```py
+from django.db.models import Count
+
+# Agrega un campo 'num_books' a cada autor con la cantidad de libros relacionados
+authors = Author.objects.annotate(num_books=Count('books')) # Books viene de la relacion de Book y author
+
+for author in authors:
+    print(author.name, author.num_books)
+```
+
+**¡Importante!**
+
+Los agregations nos dan informacion global, si queremos informacion registro por registro utilizemos annotations.
+
+
+- **Transactions Atomic**
+
+Es un conjunto de operaciones en base de datos que se ejecutan todas juntas, en caso de que alguna falle se ejecuta un roolback se deshace todo lo hecho.
+
+```py
+from django.db import transaction
+
+# En caso llegue a fallar no se ejecuta ninguna operacion
+with transaction.atomic()
+    author = Author.objects.create(
+        name="Edwin",
+        birth_date="2002-10-28"
+    )
+    Book.objects.create(
+        title="Django",
+        publication_date="2025-10-10",
+        author=author,
+        pages=250,
+        isbn="25466884"
+    )
+
+```
