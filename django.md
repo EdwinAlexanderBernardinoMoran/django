@@ -477,7 +477,7 @@ rowling.name.upper()
 rowling.save() # Guardando los datos en la bd.
 ```
 
-### Crear registros en lote
+#### Crear registros en lote
 
 - Crear registros en lote en Django significa insertar múltiples registros en la base de datos en una sola operación, en lugar de guardar cada objeto individualmente. Esto se logra usando el método `bulk_create()` del ORM, lo que mejora el rendimiento al reducir la cantidad de consultas a la base de datos.
 
@@ -744,4 +744,21 @@ with transaction.atomic()
         isbn="25466884"
     )
 
+```
+
+## S9 - Relaciones entre modelos
+
+#### Relaciones uno a muchos (Foreign Key)
+
+Se refiere a una estructura donde un registro de un modelo puede estar relacionado con múltiples registros de otro modelo. Esto se implementa usando el campo ForeignKey.
+
+- **ForeignKey**: Crea una columna author_id en la tabla de books, relaciona cada libro con un author.
+
+```py
+class Autor(models.Model):
+    nombre = models.CharField(max_length=100)
+
+class Libro(models.Model):
+    titulo = models.CharField(max_length=100)
+    autor = models.ForeignKey(Autor, on_delete=models.CASCADE, related_name='books')
 ```
