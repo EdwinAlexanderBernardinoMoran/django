@@ -762,3 +762,51 @@ class Libro(models.Model):
     titulo = models.CharField(max_length=100)
     autor = models.ForeignKey(Autor, on_delete=models.CASCADE, related_name='books')
 ```
+
+#### Relaciones muchos a muchos (ManyToManyField)
+
+Se usan cuando una instancia de un modelo puede estar relacionada con varias instancias de otro modelo, y viceversa. Por ejemplo, un genero puede estar en varios libros, y un libro puede tener varios generos. En Django, esto se implementa usando el campo `ManyToManyField`. Este campo crea automáticamente una tabla intermedia en la base de datos para gestionar las relaciones.
+
+```py
+class Genre(models.Model):
+    name = models.CharField(max_length=50, unique=True)
+
+    def __str__(self):
+        return self.name
+
+class Book(models.Model):
+    genres = models.ManyToManyField(Genre, related_name='books')
+
+    def __str__(self):
+        return self.title
+```
+
+- Forma de asignar datos a la relacion.
+
+```bash
+
+ficcion = Genre.objects.get(id=1)
+drama = Genre.objects.get(id=2)
+
+bookOne = Book.objects.get(id=1) # Puedes crear uno
+
+# Asignando genero al libro
+bookOne.add(ficcion,drama)
+
+# Obteniendo todos los generos relacionados al libro
+bookOne.genres.all()
+
+# Obteniendo todos los libros de un genero
+ficcion.books.all()
+```
+
+#### Relacion uno a uno(One to One)
+
+Es un tipo de relación entre dos modelos donde cada instancia de un modelo está asociada con una sola instancia de otro modelo, y viceversa. Se utiliza el campo `OneToOneField` en uno de los modelos.
+
+```bash
+bookOne = Book.objects.get(id=1) # Puedes crear uno
+
+detail = BookDetail.objects.create(summary="New summary", cover_url="http://www.google.com/image.jpg", language="Español", book=book)
+```
+
