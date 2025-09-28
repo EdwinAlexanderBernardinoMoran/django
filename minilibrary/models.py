@@ -7,6 +7,12 @@ class Author(models.Model):
 
     def __str__(self):
         return self.name
+    
+class Genre(models.Model):
+    name = models.CharField(max_length=50, unique=True)
+
+    def __str__(self):
+        return self.name
 
 class Book(models.Model):
     title = models.CharField(max_length=200)
@@ -16,6 +22,7 @@ class Book(models.Model):
     )
     pages = models.IntegerField()
     isbn = models.CharField(max_length=50)
+    genres = models.ManyToManyField(Genre, related_name='books')
 
     def __str__(self):
         return self.title
