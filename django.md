@@ -810,3 +810,37 @@ bookOne = Book.objects.get(id=1) # Puedes crear uno
 detail = BookDetail.objects.create(summary="New summary", cover_url="http://www.google.com/image.jpg", language="Español", book=book)
 ```
 
+#### Select related
+
+Unicamente funciona para `Foreign Key` y `OneToOneField` esto hace un join a la misma consulta y carga los objetos relacionados en una sola llamada en lugar de cargarlos uno por uno.
+
+```py
+books = Book.objects.select_related("author")
+```
+
+#### Prefecth related
+
+`prefetch_related` es un método del ORM de Django que se utiliza para optimizar consultas cuando trabajas con relaciones de tipo `ManyToManyField` o relaciones inversas de `ForeignKey`. Permite obtener los objetos relacionados en una sola consulta adicional, evitando así el problema de N+1 consultas.
+
+**¿Cuándo usarlo?**
+- Cuando necesitas acceder a objetos relacionados de tipo muchos a muchos o relaciones inversas y quieres evitar múltiples consultas a la base de datos.
+
+```py
+# Supongamos que Book tiene una relación ManyToMany con Genre
+books = Book.objects.prefetch_related('genres')
+
+for book in books:
+    # No hará una consulta por cada book, ya que los géneros ya están precargados
+    print(book.title, [genre.name for genre in book.genres.all()])
+```
+
+```py
+genres = Genre.objects.prefecth_related("books")
+
+for genre in genres:
+    books = genre.books.all()
+```
+
+**Diferencia con `select_related`:**
+- `select_related` se usa para relaciones `ForeignKey` y `OneToOneField` (hace un JOIN).
+- `prefetch_related` se usa para relaciones `ManyToManyField` y relaciones inversas (hace consultas separadas y las une en Python).
